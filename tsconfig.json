@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "jsx": "preserve",
+    "removeComments": false,
+    "target": "es2015",
+    "module": "amd",
+    "outFile": "babel/index.js",
+    "inlineSources": true,
+    "inlineSourceMap": true,
+	"forceConsistentCasingInFileNames": true,
+	"listFiles": false,
+	"noImplicitReturns": false,
+	"pretty": false,
+	"newLine": "lf"
+  },
+  "files": [
+	"src/_lib-references.ts",
+	"src/_references.ts"
+  ],
+  "compileOnSave": false
+}
