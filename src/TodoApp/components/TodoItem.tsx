@@ -34,7 +34,7 @@ namespace TodoApp.components
 
 		private onToggleComplete=()=>
 		{
-			this.props.todo.complete.value = true;
+			this.props.todo.complete.value = !this.props.todo.complete.value;
 		}
 
 		private onDoubleClick=()=>
