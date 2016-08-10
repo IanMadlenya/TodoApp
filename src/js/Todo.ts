@@ -4,7 +4,6 @@ namespace TodoApp {
 
 	export class Todo
 	{
-		id = Weave.linkableChild(this, LinkableString);
 		text = Weave.linkableChild(this, LinkableString);
 		complete = Weave.linkableChild(this, LinkableBoolean);
 	}

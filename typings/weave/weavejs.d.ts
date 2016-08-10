@@ -1,42 +1,14 @@
-/// <reference path="../FileSaver/FileSaver.d.ts" />
-/// <reference path="../c3/c3.d.ts" />
-/// <reference path="../classnames/classnames.d.ts" />
-/// <reference path="../clipboard/clipboard.d.ts" />
-/// <reference path="../codemirror/codemirror.d.ts" />
-/// <reference path="../codemirror/react-codemirror.d.ts" />
-/// <reference path="../d3/d3.d.ts" />
-/// <reference path="../fixed-data-table/fixed-data-table.d.ts" />
-/// <reference path="../fuse/fuse.d.ts" />
-/// <reference path="../jquery/jquery.d.ts" />
-/// <reference path="../jszip/jszip.d.ts" />
-/// <reference path="../lodash/lodash.d.ts" />
-/// <reference path="../moment/moment-node.d.ts" />
-/// <reference path="../moment/moment.d.ts" />
-/// <reference path="../openlayers/openlayers.d.ts" />
-/// <reference path="../pixi.js/pixi.js.d.ts" />
-/// <reference path="../proj4/proj4.d.ts" />
-/// <reference path="../rc-slider/rc-slider.d.ts" />
-/// <reference path="../react-color/react-color.d.ts" />
-/// <reference path="../react-date-picker.d.ts" />
-/// <reference path="../react-dropzone/react-dropzone.d.ts" />
-/// <reference path="../react-notification-system/react-notification-system.d.ts" />
-/// <reference path="../react-sparklines/react-sparklines.d.ts" />
-/// <reference path="../react-swf/react-swf.d.ts" />
-/// <reference path="../react/react-addons-create-fragment.d.ts" />
-/// <reference path="../react/react-addons-css-transition-group.d.ts" />
-/// <reference path="../react/react-addons-linked-state-mixin.d.ts" />
-/// <reference path="../react/react-addons-perf.d.ts" />
-/// <reference path="../react/react-addons-pure-render-mixin.d.ts" />
-/// <reference path="../react/react-addons-test-utils.d.ts" />
-/// <reference path="../react/react-addons-transition-group.d.ts" />
-/// <reference path="../react/react-addons-update.d.ts" />
-/// <reference path="../react/react-dom.d.ts" />
-/// <reference path="../react/react-global.d.ts" />
-/// <reference path="../react/react.d.ts" />
-/// <reference path="../swfobject/swfobject.d.ts" />
-/// <reference path="../tsd.d.ts" />
-/// <reference path="../weave/as-types.d.ts" />
-/// <reference path="../weave/weavejs-core.d.ts" />
+declare namespace weavejs.flux {
+    var Dispatcher: Weave;
+}
+declare namespace weavejs.flux {
+    import LinkableHashMap = weavejs.core.LinkableHashMap;
+    class WeaveStore {
+        protected store: LinkableHashMap;
+        addChangeListener(callback: Function): void;
+        removeChangeListener(callback: Function): void;
+    }
+}
 declare namespace weavejs.geom.net_ivank_voronoi {
     import Point = weavejs.geom.Point;
     class VEdge {
@@ -242,6 +214,15 @@ declare namespace weavejs.geom.radviz {
         static searchForColumn(column: IAttributeColumn, orderedColumns: IAttributeColumn[]): IAttributeColumn;
     }
 }
+declare namespace weavejs.mvc {
+    import LinkableHashMap = weavejs.core.LinkableHashMap;
+    class Model {
+        store: LinkableHashMap;
+        constructor(name: string, type: Class);
+        subscribe(context: Object, onChange: Function): void;
+        unsubscribe(context: Object, onChange: Function): void;
+    }
+}
 declare namespace weavejs.util {
     import Graphics = PIXI.Graphics;
     import Point = weavejs.geom.Point;
@@ -303,6 +284,20 @@ declare namespace weavejs.ui {
     }
     function ProgressBar(props: ProgressBarProps): JSX.Element;
 }
+declare namespace weave.ui {
+    import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
+    import ITreeDescriptor = weavejs.ui.ITreeDescriptor;
+    /**
+     * Tells a Tree control how to work with IWeaveTreeNode objects.
+     */
+    class WeaveTreeNodeDescriptor<Node extends IWeaveTreeNode> implements ITreeDescriptor<Node> {
+        getLabel(node: Node): string;
+        isEqual(node1: Node, node2: Node): boolean;
+        getChildren(node: Node): Node[];
+        hasChildBranches(node: Node): boolean;
+        isBranch(node: Node): boolean;
+    }
+}
 declare namespace weavejs.ui.flexbox {
     interface BoxProps<T> extends React.HTMLProps<T> {
         padded?: boolean;
@@ -318,6 +313,17 @@ declare namespace weavejs.ui.flexbox {
 }
 declare namespace weavejs.util {
     function polyfill(window: any): void;
+}
+declare namespace weavejs.tool.oltool.layer {
+    class CircleCache {
+        static cache: Map<string, ol.style.Circle>;
+        static circleDefToString(fillStyle: ol.style.Fill, strokeStyle: ol.style.Stroke, radius: number): string;
+        static getCircle(options: {
+            fill?: ol.style.Fill;
+            stroke?: ol.style.Stroke;
+            radius: number;
+        }): ol.style.Circle;
+    }
 }
 declare namespace weavejs.tool.oltool.layer {
     class ImageGlyphCache {
@@ -699,51 +705,6 @@ declare namespace weavejs.ui {
         render(): JSX.Element;
     }
 }
-declare namespace weavejs.app {
-    import LinkableBoolean = weavejs.core.LinkableBoolean;
-    import LinkableHashMap = weavejs.core.LinkableHashMap;
-    import ILinkableObject = weavejs.api.core.ILinkableObject;
-    import ILinkableObjectWithNewProperties = weavejs.api.core.ILinkableObjectWithNewProperties;
-    import KeySet = weavejs.data.key.KeySet;
-    import KeyFilter = weavejs.data.key.KeyFilter;
-    import ColorColumn = weavejs.data.column.ColorColumn;
-    class AccessibilityProperties {
-        enableAccessibilityFeatures: LinkableBoolean;
-        enableCaptioning: LinkableBoolean;
-    }
-    class WeaveProperties implements ILinkableObject, ILinkableObjectWithNewProperties {
-        static WEAVE_PROPERTIES: string;
-        static DEFAULT_COLOR_COLUMN: string;
-        static DEFAULT_COLOR_BIN_COLUMN: string;
-        static DEFAULT_COLOR_DATA_COLUMN: string;
-        static DEFAULT_SUBSET_KEYFILTER: string;
-        static DEFAULT_SELECTION_KEYSET: string;
-        static DEFAULT_PROBE_KEYSET: string;
-        static ALWAYS_HIGHLIGHT_KEYSET: string;
-        static SAVED_SELECTION_KEYSETS: string;
-        static SAVED_SUBSETS_KEYFILTERS: string;
-        static getProperties(context: Weave | ILinkableObject): WeaveProperties;
-        static notify(weave: Weave, level: "error" | "warning" | "info" | "success", message: string): void;
-        private _weave;
-        notificationSystem: NotificationSystem.System;
-        enableMenuBar: LinkableBoolean;
-        showSessionHistorySlider: LinkableBoolean;
-        enableSessionHistoryControls: LinkableBoolean;
-        toolInteractions: LinkableHashMap;
-        accessibility: AccessibilityProperties;
-        enableGeometryProbing: LinkableBoolean;
-        macros: LinkableHashMap;
-        weave: Weave;
-        defaultProbeKeySet: KeySet;
-        defaultSelectionKeySet: KeySet;
-        defaultSubsetKeyFilter: KeyFilter;
-        defaultColorColumn: ColorColumn;
-        defaultColorBinColumn: any;
-        defaultColorDataColumn: any;
-        private init();
-        deprecatedStateMapping: Object;
-    }
-}
 declare namespace weavejs.api.ui {
     import LinkableString = weavejs.core.LinkableString;
     import LinkableBoolean = weavejs.core.LinkableBoolean;
@@ -966,6 +927,51 @@ declare namespace weavejs.geom.radviz {
         private n_to_factoradic(n, p?);
         private permutation<T>(symbols, factoradic);
         private factorial(n);
+    }
+}
+declare namespace weavejs.app {
+    import LinkableBoolean = weavejs.core.LinkableBoolean;
+    import LinkableHashMap = weavejs.core.LinkableHashMap;
+    import ILinkableObject = weavejs.api.core.ILinkableObject;
+    import ILinkableObjectWithNewProperties = weavejs.api.core.ILinkableObjectWithNewProperties;
+    import KeySet = weavejs.data.key.KeySet;
+    import KeyFilter = weavejs.data.key.KeyFilter;
+    import ColorColumn = weavejs.data.column.ColorColumn;
+    class AccessibilityProperties {
+        enableAccessibilityFeatures: LinkableBoolean;
+        enableCaptioning: LinkableBoolean;
+    }
+    class WeaveProperties implements ILinkableObject, ILinkableObjectWithNewProperties {
+        static WEAVE_PROPERTIES: string;
+        static DEFAULT_COLOR_COLUMN: string;
+        static DEFAULT_COLOR_BIN_COLUMN: string;
+        static DEFAULT_COLOR_DATA_COLUMN: string;
+        static DEFAULT_SUBSET_KEYFILTER: string;
+        static DEFAULT_SELECTION_KEYSET: string;
+        static DEFAULT_PROBE_KEYSET: string;
+        static ALWAYS_HIGHLIGHT_KEYSET: string;
+        static SAVED_SELECTION_KEYSETS: string;
+        static SAVED_SUBSETS_KEYFILTERS: string;
+        static getProperties(context: Weave | ILinkableObject): WeaveProperties;
+        static notify(weave: Weave, level: "error" | "warning" | "info" | "success", message: string): void;
+        private _weave;
+        notificationSystem: NotificationSystem.System;
+        enableMenuBar: LinkableBoolean;
+        showSessionHistorySlider: LinkableBoolean;
+        enableSessionHistoryControls: LinkableBoolean;
+        toolInteractions: LinkableHashMap;
+        accessibility: AccessibilityProperties;
+        enableGeometryProbing: LinkableBoolean;
+        macros: LinkableHashMap;
+        weave: Weave;
+        defaultProbeKeySet: KeySet;
+        defaultSelectionKeySet: KeySet;
+        defaultSubsetKeyFilter: KeyFilter;
+        defaultColorColumn: ColorColumn;
+        defaultColorBinColumn: any;
+        defaultColorDataColumn: any;
+        private init();
+        deprecatedStateMapping: Object;
     }
 }
 declare namespace weavejs.editor {
@@ -1813,7 +1819,7 @@ declare namespace weavejs.util {
     class ReactUtils {
         private static map_popup_element;
         static openPopout(jsx: JSX.Element, onLoad?: Function, onBeforeUnLoad?: Function, windowOptions?: any): Window;
-        static openPopup(context: React.ReactInstance, jsx: JSX.Element, closeOnMouseDown?: boolean, onClose?: (popup: React.ReactInstance) => void): React.ReactInstance;
+        static openPopup(context: React.ReactInstance, jsx: JSX.Element, closeOnMouseDown?: boolean, onClose?: (popup: React.ReactInstance) => void, attachToSibling?: boolean): React.ReactInstance;
         static closePopup(popup: React.ReactInstance): void;
         static generateFlexBoxLayout: (flexValues: number[], rowsUI: (React.ReactElement<any> | string | number)[][], cellStyles?: React.CSSProperties[], cellClassNames?: string[]) => JSX.Element;
         static generateGridLayout: (gridValues: string[], gridRowsUI: JSX.Element[][]) => JSX.Element;
@@ -1931,7 +1937,7 @@ declare namespace weavejs.ui {
 declare namespace weavejs.ui {
     class Popup extends React.Component<React.HTMLProps<Popup>, React.HTMLAttributes> {
         static popupSet: Set<Popup>;
-        static open(context: React.ReactInstance, jsx: JSX.Element, closeOnMouseDown?: boolean, onClose?: (popup: Popup) => void): Popup;
+        static open(context: React.ReactInstance, jsx: JSX.Element, closeOnMouseDown?: boolean, onClose?: (popup: Popup) => void, attachToSibling?: boolean): Popup;
         componentDidMount(): void;
         componentWillUnmount(): void;
         onKeyDown(event: KeyboardEvent): void;
@@ -2264,7 +2270,9 @@ declare namespace weavejs.ui.menu {
         opener?: React.ReactInstance;
     }
     interface MenuState {
-        activeIndex: number;
+        activeIndex?: number;
+        top?: number;
+        left?: number;
     }
     interface IGetMenuItems {
         getMenuItems(): MenuItemProps[];
@@ -2274,11 +2282,19 @@ declare namespace weavejs.ui.menu {
         opener: HTMLElement;
         window: Window;
         menuItemList: HTMLDivElement[];
+        lastOverflow: {
+            left: boolean;
+            top: boolean;
+            right: boolean;
+            bottom: boolean;
+        };
         constructor(props: MenuProps);
         static registerMenuSource(component: React.Component<any, any>): void;
         static getMenuItems(element: HTMLElement): MenuItemProps[];
         handleKeyPress: (event: KeyboardEvent) => void;
         componentDidMount(): void;
+        componentDidUpdate(): void;
+        handleOverflow(): void;
         componentWillUnmount(): void;
         onMouseEnter: (index: number) => void;
         onMouseLeave: (index: number) => void;
@@ -2388,54 +2404,6 @@ declare namespace weavejs.ui.menu {
         componentDidMount(): void;
         componentWillUnmount(): void;
         renderMenuBarItem(index: number, props: MenuBarItemProps): JSX.Element;
-        render(): JSX.Element;
-    }
-}
-declare namespace weavejs.ui {
-    import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
-    interface IWeaveTreeState {
-        selectedItems?: Array<IWeaveTreeNode>;
-        openItems?: Array<IWeaveTreeNode>;
-        columnWidth?: number;
-    }
-    interface IWeaveTreeProps {
-        root: IWeaveTreeNode;
-        style?: any;
-        hideRoot?: boolean;
-        hideLeaves?: boolean;
-        hideBranches?: boolean;
-        filterFunc?: (node: IWeaveTreeNode) => boolean;
-        multipleSelection?: boolean;
-        onSelect?: (selectedItems: Array<IWeaveTreeNode>) => void;
-        onExpand?: (openItems: Array<IWeaveTreeNode>) => void;
-        initialOpenItems?: Array<IWeaveTreeNode>;
-        initialSelectedItems?: Array<IWeaveTreeNode>;
-        onDoubleClick?: (item: IWeaveTreeNode) => void;
-    }
-    class WeaveTree extends React.Component<IWeaveTreeProps, IWeaveTreeState> {
-        constructor(props: IWeaveTreeProps);
-        state: IWeaveTreeState;
-        componentWillReceiveProps(nextProps: IWeaveTreeProps): void;
-        getOpen(node: IWeaveTreeNode): boolean;
-        static arrayChanged<T>(arrayA: Array<T>, arrayB: Array<T>, itemEqFunc: (a: T, b: T) => boolean): boolean;
-        componentDidUpdate(prevProps: IWeaveTreeProps, prevState: IWeaveTreeState): void;
-        componentDidMount(): void;
-        private internalSetOpen(node, value);
-        static CLASSNAME: string;
-        static CONTAINER_CLASSNAME: string;
-        static BRANCH_ICON_CLASSNAME: string;
-        static LEAF_ICON_CLASSNAME: string;
-        static OPEN_BRANCH_ICON_CLASSNAME: string;
-        static EXPANDER_CLOSED_CLASS_NAME: string;
-        static EXPANDER_OPEN_CLASS_NAME: string;
-        static EXPANDER_HIDDEN_CLASS_NAME: string;
-        private renderItem;
-        enumerateItems: (node: IWeaveTreeNode, result?: [number, IWeaveTreeNode][], depth?: number) => [number, IWeaveTreeNode][];
-        rowHeight: number;
-        private lastEnumeration;
-        onSelect: (indices: string[]) => void;
-        computeRowWidth(rowJSX: React.ReactChild): number;
-        private longestRowJSX;
         render(): JSX.Element;
     }
 }
@@ -2690,25 +2658,6 @@ declare namespace weavejs.ui {
     }
 }
 declare namespace weavejs.ui {
-    import LinkableFile = weavejs.core.LinkableFile;
-    import LinkableString = weavejs.core.LinkableString;
-    interface IFileSelectorProps extends React.HTMLProps<FileSelector> {
-        targetUrl: LinkableFile | LinkableString;
-        placeholder?: string;
-        accept?: string;
-        onFileChange?: () => void;
-    }
-    interface IFileSelectorState {
-        validExtension: boolean;
-    }
-    class FileSelector extends React.Component<IFileSelectorProps, IFileSelectorState> {
-        constructor(props: IFileSelectorProps);
-        handleFileChange: (event: React.FormEvent) => void;
-        componentWillReceiveProps(nextProps: IFileSelectorProps): void;
-        render(): JSX.Element;
-    }
-}
-declare namespace weavejs.ui {
     import WeaveFileInfo = weavejs.net.beans.WeaveFileInfo;
     interface IFileInfoViewProps extends React.Props<FileInfoView> {
         fileInfo?: WeaveFileInfo;
@@ -2949,14 +2898,114 @@ declare namespace weavejs.ui {
         getColumnTitle(columnId: string): React.ReactElement<any> | string | number;
         render(): JSX.Element;
     }
+    namespace DataTable {
+        interface IRow {
+            [columnKey: string]: React.ReactChild;
+        }
+        class ObjectDataTable extends DataTable<IRow> {
+        }
+    }
 }
 declare namespace weavejs.ui {
-    import DataTable = weavejs.ui.DataTable;
-    interface IRow {
-        [columnKey: string]: React.ReactChild;
+    interface IWeaveTreeState<TreeNode> {
+        selectedItems?: TreeNode[];
+        openItems?: TreeNode[];
+        columnWidth?: number;
     }
-    class ObjectDataTable extends DataTable<IRow> {
-        constructor(props: IDataTableProps<IRow>);
+    interface IWeaveTreeProps<TreeNode> {
+        root?: TreeNode;
+        treeDescriptor?: ITreeDescriptor<TreeNode>;
+        style?: any;
+        hideRoot?: boolean;
+        hideLeaves?: boolean;
+        hideBranches?: boolean;
+        filterFunc?: (node: TreeNode) => boolean;
+        multipleSelection?: boolean;
+        onSelect?: (selectedItems: TreeNode[]) => void;
+        onExpand?: (openItems: TreeNode[]) => void;
+        initialOpenItems?: TreeNode[];
+        initialSelectedItems?: TreeNode[];
+        onDoubleClick?: (item: TreeNode) => void;
+    }
+    class WeaveTree<TreeNode> extends React.Component<IWeaveTreeProps<TreeNode>, IWeaveTreeState<TreeNode>> {
+        static defaultProps: IWeaveTreeProps<any>;
+        constructor(props: IWeaveTreeProps<TreeNode>);
+        state: IWeaveTreeState<TreeNode>;
+        componentWillReceiveProps(nextProps: IWeaveTreeProps<TreeNode>): void;
+        isOpen(node: TreeNode): boolean;
+        private nodeArraysChanged(arrayA, arrayB);
+        private areNodesEqual;
+        componentDidUpdate(prevProps: IWeaveTreeProps<TreeNode>, prevState: IWeaveTreeState<TreeNode>): void;
+        componentDidMount(): void;
+        private internalSetOpen(node, value);
+        static CLASSNAME: string;
+        static BRANCH_ICON_CLASSNAME: string;
+        static LEAF_ICON_CLASSNAME: string;
+        static OPEN_BRANCH_ICON_CLASSNAME: string;
+        static EXPANDER_CLOSED_CLASS_NAME: string;
+        static EXPANDER_OPEN_CLASS_NAME: string;
+        static EXPANDER_HIDDEN_CLASS_NAME: string;
+        private renderItem;
+        enumerateItems: (node: TreeNode, result?: [number, TreeNode][], depth?: number) => [number, TreeNode][];
+        rowHeight: number;
+        private lastEnumeration;
+        onSelect: (indices: string[]) => void;
+        computeRowWidth(rowJSX: React.ReactChild): number;
+        private longestRowJSX;
+        render(): JSX.Element;
+    }
+    interface ITreeDescriptor<Node> {
+        getLabel(node: Node): string;
+        isEqual(node1: Node, node2: Node): boolean;
+        getChildren: (node: Node) => Node[];
+        hasChildBranches: (node: Node) => boolean;
+        isBranch: (node: Node) => boolean;
+        addChildAt?: (parent: Node, newChild: Node, index: int) => boolean;
+        removeChildAt?: (parent: Node, child: Node, index: int) => boolean;
+    }
+    interface IBasicTreeNode {
+        label?: string;
+        children?: IBasicTreeNode[];
+    }
+    class BasicTreeDescriptor<Node extends IBasicTreeNode> implements ITreeDescriptor<Node> {
+        getLabel(node: Node): string;
+        isEqual(node1: Node, node2: Node): boolean;
+        getChildren(node: Node): Node[];
+        isBranch(node: Node): boolean;
+        hasChildBranches(node: Node): boolean;
+        addChildAt(parent: Node, newChild: Node, index: int): boolean;
+        removeChildAt(parent: Node, child: Node, index: int): boolean;
+    }
+    namespace WeaveTree {
+        class BasicWeaveTree extends WeaveTree<IBasicTreeNode> {
+        }
+    }
+}
+declare namespace weavejs.ui {
+    import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
+    import IColumnReference = weavejs.api.data.IColumnReference;
+    class WeaveDataTree extends WeaveTree<IWeaveTreeNode & IColumnReference> {
+        static defaultProps: IWeaveTreeProps<any>;
+        constructor(props: IWeaveTreeProps<IWeaveTreeNode & IColumnReference>);
+    }
+}
+declare namespace weavejs.ui {
+    import LinkableFile = weavejs.core.LinkableFile;
+    import LinkableString = weavejs.core.LinkableString;
+    interface IFileSelectorProps extends React.HTMLProps<FileSelector> {
+        targetUrl: LinkableFile | LinkableString;
+        placeholder?: string;
+        accept?: string;
+        onFileChange?: () => void;
+    }
+    interface IFileSelectorState {
+        validExtension: boolean;
+    }
+    class FileSelector extends React.Component<IFileSelectorProps, IFileSelectorState> {
+        constructor(props: IFileSelectorProps);
+        handleFileChange: (event: React.FormEvent) => void;
+        componentWillReceiveProps(nextProps: IFileSelectorProps): void;
+        render(): JSX.Element;
     }
 }
 declare namespace weavejs.ui {
@@ -3079,12 +3128,13 @@ declare namespace weavejs.ui {
 }
 declare namespace weavejs.ui {
     import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
+    import IColumnReference = weavejs.api.data.IColumnReference;
     import SmartComponent = weavejs.ui.SmartComponent;
     interface IHierarchyExplorerProps {
-        initialSelectedItems: IWeaveTreeNode[];
-        root: IWeaveTreeNode;
-        onSelect: (selectedNodes: IWeaveTreeNode[]) => void;
-        onDoubleClick: (clickedNode: IWeaveTreeNode) => void;
+        initialSelectedItems: (IWeaveTreeNode & IColumnReference)[];
+        root: IWeaveTreeNode & IColumnReference;
+        onSelect: (selectedNodes: (IWeaveTreeNode & IColumnReference)[]) => void;
+        onDoubleClick: (clickedNode: IWeaveTreeNode & IColumnReference) => void;
         skipSelections?: boolean;
     }
     interface IHierarchyExplorerState {
@@ -3092,8 +3142,8 @@ declare namespace weavejs.ui {
     class HierarchyExplorer extends SmartComponent<IHierarchyExplorerProps, IHierarchyExplorerState> {
         constructor(props: IHierarchyExplorerProps);
         componentWillReceiveProps(nextProps: IHierarchyExplorerProps): void;
-        selectedFolder: IWeaveTreeNode;
-        selectedItems: IWeaveTreeNode[];
+        selectedFolder: IWeaveTreeNode & IColumnReference;
+        selectedItems: (IWeaveTreeNode & IColumnReference)[];
         componentDidMount(): void;
         private folderTree;
         private columnTree;
@@ -3155,29 +3205,6 @@ declare namespace weavejs.layout {
         private generateNextTabLabel();
         removePanel(id: WeavePathArray): void;
         replacePanel(id: WeavePathArray, newId: WeavePathArray): void;
-        render(): JSX.Element;
-    }
-}
-declare namespace weavejs.editor {
-    import WeaveTreeItem = weavejs.util.WeaveTreeItem;
-    import SmartComponent = weavejs.ui.SmartComponent;
-    import ILinkableObject = weavejs.api.core.ILinkableObject;
-    import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
-    interface ISessionStateEditorProps extends React.Props<SessionStateEditor> {
-        rootObject: ILinkableObject;
-        initialSelectedObject?: ILinkableObject;
-    }
-    interface ISessionStateEditorState {
-        selectedNode: IWeaveTreeNode & WeaveTreeItem;
-    }
-    class SessionStateEditor extends SmartComponent<ISessionStateEditorProps, ISessionStateEditorState> {
-        static getTreeNode(rootObject: ILinkableObject): WeaveTreeItem & IWeaveTreeNode;
-        static openInstance(context: React.ReactInstance, selectedObject: ILinkableObject): ControlPanel;
-        constructor(props: ISessionStateEditorProps);
-        selectedObject: ILinkableObject;
-        componentWillReceiveProps(props: ISessionStateEditorProps): void;
-        private onSelect;
-        private onDoubleClick;
         render(): JSX.Element;
     }
 }
@@ -3432,6 +3459,7 @@ declare namespace weavejs.ui {
 declare namespace weavejs.ui {
     import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
     import ILinkableHashMap = weavejs.api.core.ILinkableHashMap;
+    import IColumnReference = weavejs.api.data.IColumnReference;
     import IColumnWrapper = weavejs.api.data.IColumnWrapper;
     import ControlPanel = weavejs.editor.ControlPanel;
     interface IAttributeSelectorProps {
@@ -3456,7 +3484,7 @@ declare namespace weavejs.ui {
         onSelectAll: () => void;
         onDoubleClick: (item: IWeaveTreeNode) => void;
         onSelectColumn: (selectedItems: IWeaveTreeNode[]) => void;
-        getSelectedTreeNodes(): IWeaveTreeNode[];
+        getSelectedTreeNodes(): (IWeaveTreeNode & IColumnReference)[];
         static openInstance(context: React.ReactInstance, attributeName: string, attributes: Map<string, IColumnWrapper | ILinkableHashMap>): ControlPanel;
         private selectableAttributeComponentKey;
         private hierarchyExplorer;
@@ -4186,6 +4214,29 @@ declare namespace weavejs.tool {
     }
 }
 declare namespace weavejs.tool {
+    import IVisToolProps = weavejs.api.ui.IVisToolProps;
+    import IVisToolState = weavejs.api.ui.IVisToolState;
+    import IVisTool = weavejs.api.ui.IVisTool;
+    import ILinkableHashMap = weavejs.api.core.ILinkableHashMap;
+    import IColumnWrapper = weavejs.api.data.IColumnWrapper;
+    import LinkableString = weavejs.core.LinkableString;
+    import LinkableDynamicObject = weavejs.core.LinkableDynamicObject;
+    import DynamicKeyFilter = weavejs.data.key.DynamicKeyFilter;
+    class DataMessageTool extends React.Component<IVisToolProps, IVisToolState> implements IVisTool {
+        constructor(props: IVisToolProps);
+        selectableAttributes: Map<string, IColumnWrapper | ILinkableHashMap>;
+        panelTitle: LinkableString;
+        messageTarget: LinkableDynamicObject;
+        keySetSource: DynamicKeyFilter;
+        command: LinkableString;
+        title: string;
+        defaultPanelTitle: string;
+        renderEditor: (pushCrumb?: (title: string, renderFn: () => JSX.Element, stateObject: any) => void) => JSX.Element;
+        sendMessage: () => void;
+        render(): JSX.Element;
+    }
+}
+declare namespace weavejs.tool {
     import LinkableString = weavejs.core.LinkableString;
     import LinkableDynamicObject = weavejs.core.LinkableDynamicObject;
     import ILinkableObjectWithNewProperties = weavejs.api.core.ILinkableObjectWithNewProperties;
@@ -4885,6 +4936,47 @@ declare namespace weavejs.layout {
     }
 }
 declare namespace weavejs.editor {
+    import ILinkableObject = weavejs.api.core.ILinkableObject;
+    import WeaveTreeItem = weavejs.util.WeaveTreeItem;
+    import SmartComponent = weavejs.ui.SmartComponent;
+    import MenuItemProps = weavejs.ui.menu.MenuItemProps;
+    import IGetMenuItems = weavejs.ui.menu.IGetMenuItems;
+    interface ISessionStateEditorProps extends React.Props<SessionStateEditor> {
+        rootObject: ILinkableObject;
+        initialSelectedObject?: ILinkableObject;
+    }
+    interface ISessionStateEditorState {
+        selectedNode: WeaveTreeItem;
+    }
+    class SessionStateEditor extends SmartComponent<ISessionStateEditorProps, ISessionStateEditorState> implements IGetMenuItems {
+        static getTreeNode(object: ILinkableObject): WeaveTreeItem;
+        static openInstance(context: React.ReactInstance, selectedObject: ILinkableObject): ControlPanel;
+        constructor(props: ISessionStateEditorProps);
+        selectedObject: ILinkableObject;
+        selectedTreeNode: WeaveTreeItem;
+        componentDidMount(): void;
+        componentWillReceiveProps(props: ISessionStateEditorProps): void;
+        private onSelect;
+        private onDoubleClick;
+        getMenuItems(): MenuItemProps[];
+        /**
+         * Displays a modal dialog and requests user input with OK/Cancel buttons
+         * @param title dialog window title text
+         * @param message dialog content text
+         * @param defaultInput default value for text input box
+         * @param inputValidator checked every time user modifies input and boolean result determines if the OK button should be enabled
+         * @param inputHandler Called when user clicks OK button
+         */
+        private showInputDialog(title, message, defaultInput?, inputValidator?, inputHandler?);
+        private newObject(parent, classDef);
+        private canDeleteSelectedItem;
+        private deleteSelectedItem;
+        reportError(message: string): void;
+        private treeDescriptor;
+        render(): JSX.Element;
+    }
+}
+declare namespace weavejs.editor {
     import IVisTool = weavejs.api.ui.IVisTool;
     interface WeaveToolEditorProps extends React.HTMLProps<WeaveToolEditor> {
         tool: IVisTool;
@@ -5115,7 +5207,6 @@ declare namespace weavejs.menu {
 }
 declare namespace weavejs.editor {
     import SmartComponent = weavejs.ui.SmartComponent;
-    import WeaveTree = weavejs.ui.WeaveTree;
     import LinkableWatcher = weavejs.core.LinkableWatcher;
     import IDataSource = weavejs.api.data.IDataSource;
     import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
@@ -5130,16 +5221,13 @@ declare namespace weavejs.editor {
         dataSource: IDataSource;
     }
     interface IDataSourceEditorState {
-        selectedBranch?: IWeaveTreeNode;
-        selectedLeaf?: IWeaveTreeNode;
+        selectedBranch?: IWeaveTreeNode & IColumnReference;
+        selectedLeaf?: IWeaveTreeNode & IColumnReference;
         showPreviewView?: boolean;
         guideToTab?: string;
     }
     class DataSourceEditor extends SmartComponent<IDataSourceEditorProps, IDataSourceEditorState> {
         dataSourceWatcher: LinkableWatcher;
-        protected enablePreview: boolean;
-        protected tree: WeaveTree;
-        protected editorButtons: Map<React.ReactChild, Function>;
         protected weaveRoot: ILinkableHashMap;
         constructor(props: IDataSourceEditorProps);
         handleProps(props: IDataSourceEditorProps): void;
@@ -5154,7 +5242,7 @@ declare namespace weavejs.editor {
         renderConfigureView(): JSX.Element;
         getColumns: () => IColumnReference[];
         renderTablePreview: (columnRefs: IColumnReference[]) => JSX.Element;
-        setSelection(props: IDataSourceEditorProps, newBranch: IWeaveTreeNode, newLeaf: IWeaveTreeNode): void;
+        setSelection(props: IDataSourceEditorProps, newBranch: IWeaveTreeNode & IColumnReference, newLeaf: IWeaveTreeNode & IColumnReference): void;
         render(): JSX.Element;
     }
 }
@@ -5650,9 +5738,10 @@ declare namespace weavejs.editor {
     import IWeaveTreeNode = weavejs.api.data.IWeaveTreeNode;
     import PopupWindow = weavejs.dialog.PopupWindow;
     import WeaveAdminService = weavejs.net.WeaveAdminService;
+    import IColumnReference = weavejs.api.data.IColumnReference;
     class WeaveDataSourceEditor extends DataSourceEditor {
         componentWillReceiveProps(props: IDataSourceEditorProps): void;
-        onHierarchySelected: (selectedItems: IWeaveTreeNode[]) => void;
+        onHierarchySelected: (selectedItems: (IWeaveTreeNode & IColumnReference)[]) => void;
         setHierarchySelection(): void;
         service: WeaveAdminService;
         private static getBaseUrl(serviceUrl);
@@ -5767,6 +5856,7 @@ declare namespace weavejs.app {
         renderPath?: WeavePathArray;
         readUrlParams?: boolean;
         showFileDialog?: boolean;
+        forceMenuBar?: boolean;
         initializeTabs?: boolean;
         enableTour?: boolean;
         onClose?: () => void;
