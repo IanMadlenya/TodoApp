@@ -8,13 +8,11 @@
  */
 namespace TodoApp.components
 {
-	import TodoTextInput = TodoApp.components.TodoTextInput;
 	import CenteredIcon = weavejs.ui.CenteredIcon;
-	import TodoStore = TodoApp.store.TodoStore;
-	import TodoActions = TodoApp.actions.TodoActions;
 
 	export interface HeaderProps
 	{
+		store:TodoStore;
 	}
 
 	export interface HeaderState
@@ -25,17 +23,17 @@ namespace TodoApp.components
 	{
 		private onSave=(text:string)=>
 		{
-			TodoActions.create(text);
+			this.props.store.create(text);
 		}
 
 		private undo=()=>
 		{
-			TodoStore.getInstance().undo();
+			Weave.getWeave(this.props.store).history.undo();
 		}
 
 		private redo=()=>
 		{
-			TodoStore.getInstance().redo();
+			Weave.getWeave(this.props.store).history.redo();
 		}
 
 		render()

@@ -1,4 +1,5 @@
-namespace TodoApp {
+namespace TodoApp
+{
 	import LinkableString = weavejs.core.LinkableString;
 	import LinkableBoolean = weavejs.core.LinkableBoolean;
 
@@ -7,5 +8,6 @@ namespace TodoApp {
 		text = Weave.linkableChild(this, LinkableString);
 		complete = Weave.linkableChild(this, LinkableBoolean);
 	}
-	Weave.registerClass(Todo, "weavejs.app.TodoApp.Todo", null, "Todo");
+
+	Weave.registerClass(Todo, "TodoApp.Todo", null, "Todo");
 }

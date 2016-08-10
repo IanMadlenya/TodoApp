@@ -1,15 +1,11 @@
 namespace TodoApp.components
 {
-	import Todo = TodoApp.Todo;
 	import DynamicComponent = weavejs.ui.DynamicComponent;
-	import LinkableWatcher = weavejs.core.LinkableWatcher;
-	import WeaveReactUtils = weavejs.util.WeaveReactUtils;
-	import TodoActions = TodoApp.actions.TodoActions;
 
 	export interface TodoItemProps
 	{
-		todo:TodoState;
-		onDestroyClick?: () => void;
+		store:TodoStore;
+		todo:Todo;
 	}
 
 	export interface TodoItemState
@@ -38,11 +34,18 @@ namespace TodoApp.components
 
 		private onToggleComplete=()=>
 		{
-			TodoActions.toggleComplete(this.props.todo.id);
+			this.props.todo.complete.value = true;
 		}
 
 		private onDoubleClick=()=>
 		{
+			this.setState({isEditing: true});
+		}
+
+		private onDestroyClick=()=>
+		{
+			this.props.store.destroy(this.props.todo);
+
 			this.setState({isEditing: true});
 		}
 
@@ -54,22 +57,27 @@ namespace TodoApp.components
 		 */
 		private onSave=(text:string)=>
 		{
-			TodoActions.updateText(this.props.todo.id, text);
+			this.props.todo.text.value = text;
 			this.setState({isEditing: false});
 		}
 
 		/**
 		 * @return {object}
 		 */
-		render() {
+		render()
+		{
+			DynamicComponent.setDependencies(this, [this.props.todo]);
+
 			var input:JSX.Element;
-			if (this.state.isEditing) {
-				input =
+			if (this.state.isEditing)
+			{
+				input = (
 					<TodoTextInput
 						className="edit"
 						onSave={this.onSave}
-						value={this.props.todo.text}
-					/>;
+						value={this.props.todo.text.value}
+					/>
+				);
 			}
 
 			// List items should get the class 'editing' when editing
@@ -80,27 +88,26 @@ namespace TodoApp.components
 			return (
 				<li
 					className={classNames({
-					'completed': this.props.todo.complete,
-					'editing': this.state.isEditing
+						'completed': this.props.todo.complete.value,
+						'editing': this.state.isEditing
 					})}
 				>
 					<div className="view">
 						<input
 							className="toggle"
 							type="checkbox"
-							checked={this.props.todo.complete}
+							checked={this.props.todo.complete.value}
 							onChange={this.onToggleComplete}
 						/>
 						<label onDoubleClick={this.onDoubleClick}>
-							{this.props.todo.text}
+							{this.props.todo.text.value}
 						</label>
-						<button className="destroy" onClick={this.props.onDestroyClick}/>
+						<button className="destroy" onClick={this.onDestroyClick}/>
 					</div>
 					{input}
 				</li>
 			);
 		}
 	}
-	Weave.registerClass(Todo, "weavejs.app.TodoApp.Todo", null, "Todo");
 }
 
