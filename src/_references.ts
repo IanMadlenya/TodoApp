@@ -1,4 +1,6 @@
-/// <reference path="./js//Todo.ts"/>
+/// <reference path="./js/Todo.ts"/>
+/// <reference path="./js/store/TodoStore.ts"/>
+/// <reference path="./js/actions/TodoActions.ts"/>
 /// <reference path="./js/components/TodoTextInput.tsx"/>
 /// <reference path="./js/components/TodoItem.tsx"/>
 /// <reference path="./js/components/MainSection.tsx"/>

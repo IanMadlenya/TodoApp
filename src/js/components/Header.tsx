@@ -10,24 +10,32 @@ namespace TodoApp.components
 {
 	import TodoTextInput = TodoApp.components.TodoTextInput;
 	import CenteredIcon = weavejs.ui.CenteredIcon;
+	import TodoStore = TodoApp.store.TodoStore;
+	import TodoActions = TodoApp.actions.TodoActions;
 
 	export interface HeaderProps
 	{
-		onCreate:(text:string)=>void;
-		undo:()=>void;
-		redo:()=>void;
 	}
 
 	export interface HeaderState
 	{
-
 	}
 
 	export class Header extends React.Component<HeaderProps, HeaderState>
 	{
 		private onSave=(text:string)=>
 		{
-			this.props.onCreate(text);
+			TodoActions.create(text);
+		}
+
+		private undo=()=>
+		{
+			TodoStore.getInstance().undo();
+		}
+
+		private redo=()=>
+		{
+			TodoStore.getInstance().redo();
 		}
 
 		render()
@@ -42,12 +50,12 @@ namespace TodoApp.components
 					/>
 					<div style={{float: "right"}}>
 						<CenteredIcon aria-label="Undo"
-									  onClick={this.props.undo}
+									  onClick={this.undo}
 									  className={classNames("weave-icon")}
 									  iconProps={{className: "fa fa-arrow-left"}}/>
 
 						<CenteredIcon aria-label="Redo"
-									  onClick={this.props.redo}
+									  onClick={this.redo}
 									  className={classNames("weave-icon")}
 									  iconProps={{className:"fa fa-arrow-right"}}/>
 					</div>

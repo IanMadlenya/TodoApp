@@ -4,10 +4,11 @@ namespace TodoApp.components
 	import DynamicComponent = weavejs.ui.DynamicComponent;
 	import LinkableWatcher = weavejs.core.LinkableWatcher;
 	import WeaveReactUtils = weavejs.util.WeaveReactUtils;
+	import TodoActions = TodoApp.actions.TodoActions;
 
 	export interface TodoItemProps
 	{
-		todo:Todo;
+		todo:TodoState;
 		onDestroyClick?: () => void;
 	}
 
@@ -18,10 +19,6 @@ namespace TodoApp.components
 
 	export class TodoItem extends React.Component<TodoItemProps, TodoItemState>
 	{
-		private get todo()
-		{
-			return this.props.todo;
-		}
 		/**
 		 * Copyright (c) 2014-2015, Facebook, Inc.
 		 * All rights reserved.
@@ -34,7 +31,6 @@ namespace TodoApp.components
 		constructor(props:TodoItemProps)
 		{
 			super(props);
-			DynamicComponent.setDependencies(this, [props.todo]);
 			this.state = {
 				isEditing: false
 			};
@@ -42,7 +38,7 @@ namespace TodoApp.components
 
 		private onToggleComplete=()=>
 		{
-			this.todo.complete.value  = !this.todo.complete.value;
+			TodoActions.toggleComplete(this.props.todo.id);
 		}
 
 		private onDoubleClick=()=>
@@ -58,7 +54,7 @@ namespace TodoApp.components
 		 */
 		private onSave=(text:string)=>
 		{
-			this.todo.text.value = text;
+			TodoActions.updateText(this.props.todo.id, text);
 			this.setState({isEditing: false});
 		}
 
@@ -72,7 +68,7 @@ namespace TodoApp.components
 					<TodoTextInput
 						className="edit"
 						onSave={this.onSave}
-						value={this.todo.text.value}
+						value={this.props.todo.text}
 					/>;
 			}
 
@@ -84,7 +80,7 @@ namespace TodoApp.components
 			return (
 				<li
 					className={classNames({
-					'completed': this.todo.complete.value,
+					'completed': this.props.todo.complete,
 					'editing': this.state.isEditing
 					})}
 				>
@@ -92,11 +88,11 @@ namespace TodoApp.components
 						<input
 							className="toggle"
 							type="checkbox"
-							checked={this.todo.complete.value}
+							checked={this.props.todo.complete}
 							onChange={this.onToggleComplete}
 						/>
 						<label onDoubleClick={this.onDoubleClick}>
-							{this.todo.text.value}
+							{this.props.todo.text}
 						</label>
 						<button className="destroy" onClick={this.props.onDestroyClick}/>
 					</div>

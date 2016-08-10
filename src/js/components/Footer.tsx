@@ -5,10 +5,11 @@ namespace TodoApp.components
 	import WeaveReactUtils = weavejs.util.WeaveReactUtils;
 	import LinkableWatcher = weavejs.core.LinkableWatcher;
 	import DynamicComponent = weavejs.ui.DynamicComponent;
+	import TodoActions = TodoApp.actions.TodoActions;
 
 	interface FooterProps
 	{
-		allTodos:LinkableHashMap;
+		allTodos:TodoState[];
 	}
 
 	interface FooterState
@@ -21,25 +22,20 @@ namespace TodoApp.components
 		constructor(props:FooterProps)
 		{
 			super(props);
-			DynamicComponent.setDependencies(this, [props.allTodos]);
 		}
 
-		get allTodos()
-		{
-			return this.props.allTodos;
-		}
 		/**
 		 * Event handler to delete all completed TODOs
 		 */
 		_onClearCompletedClick=()=>
 		{
-			TodoApp.App.destroyCompleted(this.allTodos);
+			TodoActions.destroyCompleted();
 		}
 
 		render()
 		{
 
-			var total = this.allTodos.getNames().length;
+			var total = this.props.allTodos.length;
 
 			if (total === 0) {
 				return null;
@@ -47,8 +43,8 @@ namespace TodoApp.components
 
 			var completed = 0;
 
-			this.allTodos.getObjects().forEach((todo:Todo) => {
-				if(todo.complete.value)
+			this.props.allTodos.forEach((todo:TodoState) => {
+				if(todo.complete)
 					completed++;
 			});
 
