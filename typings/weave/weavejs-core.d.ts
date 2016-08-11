@@ -10001,3 +10001,13 @@ declare module weavejs.util {
         data: Object;
     }
 }
+
+declare module weavejs {
+	class Weave extends __global__.Weave {
+
+	}
+}
+
+declare module "weavejs" {
+	export = weavejs;
+}

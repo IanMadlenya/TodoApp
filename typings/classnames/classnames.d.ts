@@ -14,9 +14,9 @@ interface ClassArray extends Array<ClassValue> { }
 interface ClassNamesFn {
 	(...classes: ClassValue[]): string;
 }
-
 declare var classNames: ClassNamesFn;
 
 declare module "classnames" {
-	export = classNames
+	var classNames: ClassNamesFn;
+	export { classNames as default }
 }
